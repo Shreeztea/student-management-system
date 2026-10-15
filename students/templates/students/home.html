@@ -1,0 +1,32 @@
+{% extends 'students/base.html' %}
+       
+    {% block content %}
+        <p>List of paragraphs: {{ paragraphs }}</p>
+        
+        {% for para in paragraphs %}
+        <p>{{para}}</p>
+        {% endfor %}
+        
+        {% if user.is_authenticated %}
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Logout</button>
+        </form>
+        
+        <a type="button" class="btn btn-outline-primary" href="{% url 'profile' %}">Profile</a>
+
+        {% else %}
+        <a type="button" class="btn btn-outline-danger" href="{% url 'login' %}">Login</a>
+        <a type="button" class="btn btn-outline-primary" href="{% url 'register' %}">Register</a>
+        {% endif %}
+
+        <p>Favorite Course: {{ request.session.favorite_course }}</p>
+
+
+    {% endblock %}
+
+
+
+  
+        
+        

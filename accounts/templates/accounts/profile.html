@@ -1,0 +1,13 @@
+{% extends 'students/base.html' %}
+
+{% block content %}
+<h1>Profile</h1>
+
+<p>Welcome, {{ request.user.username }}!</p>
+<p>Email: {{ request.user.email }}</p>
+<p>{{request.user}}</p>
+
+<p>Favorite Course: {{ request.session.favorite_course }}</p>
+
+<p>{{perms.students.add_student}}</p>
+{% endblock %}

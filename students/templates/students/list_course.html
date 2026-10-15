@@ -1,0 +1,80 @@
+{% extends 'students/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <input type="text" placeholder="Search..." id="search" class="form-control" />
+    </div>
+    <div class="col">
+        <button class="btn btn-primary" onClick="search()">Search</button>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+        </tr>
+    </thead>
+    <tbody id="result">
+            {% for c in courses %}
+            <tr>
+                <th scope="col">{{c.id}}</th>
+                <td>{{c.name}}</td>
+                
+            </tr>
+            {% endfor %}
+    </tbody>
+</table>
+<div class="row">
+    {% csrf_token %}
+    <div class="col">
+        <input type="text" placeholder="Course Name" id="course_name" class="form-control" />
+    </div>
+    <div class="col">
+        <button class="btn btn-primary" onClick="add()">Add</button>
+    </div>
+</div>
+<script>
+    function add(){
+        const course = document.getElementById("course_name").value;
+
+        console.log(course)
+       
+        fetch(`/course/add/`,{
+            method: 'POST',
+            headers : {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ name: course})
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("result").innerHTML += `<tr><th scope='col'>${data.id}</th> <td>${data.name}<td></tr>`
+        })
+        
+    }
+
+    function search() {
+        const course_id = document.getElementById("search").value;
+        console.log(`course id: ${course_id}`)
+
+        fetch(`/course/get/${course_id}`)
+            .then(response => {
+                if(!response.ok) {
+                    throw new Error('Course not Found')
+                }
+                return response.json()
+            })
+            .then(data => {
+                document.getElementById("result").innerHTML = `<tr><th scope='col'>${data.id}</th> <td>${data.name}<td></tr>`
+            })
+            .catch(error => console.error('Error fetching course:',error))
+        
+    }
+</script>
+
+
+{% endblock %}
