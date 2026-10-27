@@ -21,7 +21,7 @@ from drf_spectacular.views import (SpectacularAPIView,SpectacularSwaggerView,Spe
 
 from django.contrib import admin
 from django.urls import path, include
-from students.views import add_course,add_student,get_course, home, list_courses, list_students, view_student, edit_student, delete_student
+from students.views import ai_chat,add_course,add_student,get_course, home, list_courses, list_students, view_student, edit_student, delete_student
 from accounts.views import register,profile
 
 urlpatterns = [
@@ -46,6 +46,8 @@ urlpatterns = [
     path("api/schema/",SpectacularAPIView.as_view(),name="schema",),
     path("api/docs/",SpectacularSwaggerView.as_view(url_name="schema"),name="swagger-ui",),
     path("api/redoc/",SpectacularRedocView.as_view(url_name="schema"),name="redoc",),
+
+    path("ai-chat/", ai_chat, name="ai_chat"),
 ]
 
 if settings.DEBUG:

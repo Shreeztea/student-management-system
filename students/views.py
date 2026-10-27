@@ -4,7 +4,35 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import permission_required
 
 from .forms import StudentForm
-from .models import Student, Course
+from .models import AIConversation,Student, Course
+from .ai_service import ask_ai
+
+def ai_chat(request):
+    answer = ""
+    error = ""
+    question = ""
+
+    if request.method == "POST":
+        question = request.POST.get("question","").strip()
+        if question:
+            try:
+                answer = ask_ai(question)
+                AIConversation.objects.create(question=question,answer=answer)
+            except Exception:
+                error = "Sorry, the AI service is unavailable"
+
+    converations = AIConversation.objects.order_by("-created_at")
+    context = {
+            'header' : 'AI Chat Assistant',
+            'title': 'AI Chat Assistant',
+            'answer': answer,
+            'question': question,
+            'error': error,
+            'conversations': converations
+        }
+    return render(request, "students/ai_chat.html", context)
+
+
 
 def add_course(request):
     if request.method == "POST":

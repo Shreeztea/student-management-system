@@ -1,0 +1,29 @@
+{% extends 'students/base.html' %}
+
+{% block content %}
+<h2>Previous Conversation</h2>
+{% for conversation in conversations %}
+<div>
+    <h3>Q. {{conversation.question}}</h3>
+    <p>A. {{conversation.answer}}</p>
+</div>
+{% endfor %}
+<form method="post">
+    {% csrf_token %}
+
+    <label for="question">Ask a question</label>
+
+    <textarea id="question" name="question" required>{{ question }}</textarea>
+
+    <button type="submit">Ask AI</button>
+</form>
+
+{% if answer %}
+<h2>AI Response</h2>
+<p>{{ answer }}</p>
+{% endif %}
+
+{% if error %}
+<p>{{ error }}</p>
+{% endif %}
+{% endblock %}
